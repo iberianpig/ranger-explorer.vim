@@ -10,6 +10,7 @@ if exists('g:loaded_ranger_explorer')
   finish
 endif
 let g:loaded_ranger_explorer = 1
+let g:loaded_netrwPlugin = 'disable'
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -22,7 +23,6 @@ command! RangerOpenProjectRootDir
 
 augroup open_with_ranger
   autocmd!
-  let g:loaded_netrwPlugin = 'disable'
   autocmd BufEnter * silent call ranger_explorer#open_with_edit(expand("<amatch>"))
 augroup END
 
