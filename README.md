@@ -1,6 +1,6 @@
 ## ranger-explorer.vim
-Vim plugin to use [ranger](http://ranger.nongnu.org/) as a file explorer.  
-* Seamless switching between vim and ranger with opening in the same buffer
+Vim plugin to use [Ranger](http://ranger.nongnu.org/) as a file explorer.  
+* Seamless switching between Vim and Ranger with opening in the same buffer
 * Open files in tabs or in vertically/horizontal split windows on Vim from Ranger
 * Dynamically defining keymaps on Ranger
 
