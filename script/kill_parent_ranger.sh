@@ -36,27 +36,20 @@ comm(){
   echo $comm
 }
 
-ranger=$(seek_ranger_pid "$PPID")
-
-edit_cmd='edit'
-edit_path='./'
+if [ $# -ne 4 ]; then
+  echo 'require 4 argument'
+  exit 1
+fi
 
 edit_cmd=$1
 edit_path=$2
 cmd_file=$3
 path_file=$4
-if [ $# -eq 4 ]; then
-  edit_cmd=$1
-  edit_path=$2
-  cmd_file=$3
-  path_file=$4
-else
-  echo 'require 4 argument'
-  exit 1
-fi
+
+ranger=$(seek_ranger_pid "$PPID")
 
 if [ ! "$ranger" = "" ]; then
-  echo "$edit_cmd" > $cmd_file
-  echo "$edit_path" > $path_file
+  echo "$edit_cmd" > "$cmd_file"
+  echo "$edit_path" > "$path_file"
   kill "$ranger"
 fi
