@@ -12,8 +12,8 @@ endif
 let g:loaded_ranger_explorer = 1
 let g:loaded_netrwPlugin = 'disable'
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:save_cpoptions = &cpoptions
+set cpoptions&vim
 
 command! RangerOpenCurrentDir
 \    call ranger_explorer#open_current_dir()
@@ -27,5 +27,5 @@ augroup open_with_ranger
 augroup END
 
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+let &cpoptions = s:save_cpoptions
+unlet s:save_cpoptions
