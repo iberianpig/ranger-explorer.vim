@@ -14,17 +14,24 @@ let g:loaded_ranger_explorer = 1
 let s:save_cpoptions = &cpoptions
 set cpoptions&vim
 
+let s:kill_ranger    = expand('<sfile>:p:h:h') . '/script/kill_parent_ranger.sh '
+let s:cmd_file       = tempname()
+let s:path_file      = tempname()
+
 let s:keymap_edit    = exists('g:ranger_explorer_keymap_edit')    ? g:ranger_explorer_keymap_edit    :'<C-o>'
 let s:keymap_tabedit = exists('g:ranger_explorer_keymap_tabedit') ? g:ranger_explorer_keymap_tabedit :'<C-t>'
 let s:keymap_split   = exists('g:ranger_explorer_keymap_split')   ? g:ranger_explorer_keymap_split   :'<C-s>'
 let s:keymap_vsplit  = exists('g:ranger_explorer_keymap_vsplit')  ? g:ranger_explorer_keymap_vsplit  :'<C-v>'
 
-let s:kill_ranger = expand('<sfile>:p:h:h') . '/script/kill_parent_ranger.sh '
+let s:edit           = 'map ' . s:keymap_edit    . ' shell -c ' . s:kill_ranger . 'edit \%d/\%s'    . ' ' . s:cmd_file. ' ' . s:path_file
+let s:tabedit        = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file
+let s:split          = 'map ' . s:keymap_split   . ' shell -c ' . s:kill_ranger . 'split \%d/\%s'   . ' ' . s:cmd_file. ' ' . s:path_file
+let s:vsplit         = 'map ' . s:keymap_vsplit  . ' shell -c ' . s:kill_ranger . 'vsplit \%d/\%s'  . ' ' . s:cmd_file. ' ' . s:path_file
 
 function! s:project_root_dir()
-  let current_dir = expand('%:p:h')
-  let relative_git_dir = finddir('.git', current_dir . ';') 
-  let root_dir = fnamemodify(relative_git_dir, ':h')
+  let current_dir      = expand('%:p:h')
+  let relative_git_dir = finddir('.git', current_dir . ';')
+  let root_dir         = fnamemodify(relative_git_dir, ':h')
   if !isdirectory(root_dir)
     return current_dir
   endif
@@ -36,19 +43,12 @@ function! ranger_explorer#open(path)
     echomsg 'You need install ranger.'
     return
   endif
-  let s:cmd_file  = tempname()
-  let s:path_file = tempname()
-
-  let edit    = 'map ' . s:keymap_edit    . ' shell -c ' . s:kill_ranger . 'edit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file 
-  let tabedit = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file 
-  let split   = 'map ' . s:keymap_split   . ' shell -c ' . s:kill_ranger . 'split \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file 
-  let vsplit  = 'map ' . s:keymap_vsplit  . ' shell -c ' . s:kill_ranger . 'vsplit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file 
 
   exec 'silent !ranger --choosefile=' . s:path_file . ' ' . a:path 
-        \ . ' --cmd="' . edit . '"'
-        \ . ' --cmd="' . tabedit . '"'
-        \ . ' --cmd="' . split . '"'
-        \ . ' --cmd="' . vsplit . '"'
+        \ . ' --cmd="' . s:edit    . '"'
+        \ . ' --cmd="' . s:tabedit . '"'
+        \ . ' --cmd="' . s:split   . '"'
+        \ . ' --cmd="' . s:vsplit  . '"'
 
   if !filereadable(s:path_file)
     redraw!
