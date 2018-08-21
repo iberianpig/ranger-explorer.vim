@@ -32,7 +32,7 @@ Following commands are available on ranger launched from ranger-explorer
 <Ctrl-s>: edit with split window
 ```
 
-#### Customize Keymap on Ranger
+##### Customize Keymap on Ranger
 
 Following keymap is defined as defaut
 ```vim
@@ -42,7 +42,7 @@ let g:ranger_explorer_keymap_split   = '<C-s>'
 let g:ranger_explorer_keymap_vsplit  = '<C-v>'
 ```
 
-### Keymap on Vim
+#### Keymap on Vim
 
 Add following keymap to `~/.vimrc`
 ```vim
