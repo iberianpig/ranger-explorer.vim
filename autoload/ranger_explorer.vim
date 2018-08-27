@@ -22,30 +22,29 @@ function! ranger_explorer#open(path)
     return
   endif
 
-  exec 'silent !ranger --choosefile=' . s:path_file . ' ' . a:path 
+  let command = 'ranger --choosefile=' . s:path_file . ' ' . a:path 
         \ . ' --cmd="' . s:edit    . '"'
         \ . ' --cmd="' . s:tabedit . '"'
         \ . ' --cmd="' . s:split   . '"'
         \ . ' --cmd="' . s:vsplit  . '"'
 
-  if !filereadable(s:path_file)
-    redraw!
-    return
-  endif
-
-  let edit_path = system('cat ' . s:path_file . " | tr -d '\n'")
-  call system('rm ' . s:path_file)
-
-  if filereadable(s:cmd_file)
-    let edit_cmd = system('cat ' . s:cmd_file . " | tr -d '\n'")
-    call system('rm ' . s:cmd_file)
+  if has('nvim')
+    let rangerCallback = { 'name': 'ranger' }
+    function! rangerCallback.on_exit(job_id, code, event)
+      " NOTE: Delete terminal's buffer left by killing ranger process
+      silent! Bclose!
+      try
+        call s:open_file()
+      endtry
+    endfunction
+    enew
+    call termopen(command, rangerCallback)
+    startinsert
   else
-    let edit_cmd = 'edit'
+    exec 'silent !' . command
+    call s:open_file()
   endif
 
-  exec edit_cmd . ' ' . edit_path
-
-  redraw!
 endfunction
 
 function! ranger_explorer#open_project_root_dir() abort
@@ -79,10 +78,14 @@ function! s:initialize() abort
   let s:keymap_split   = get(g:, 'ranger_explorer_keymap_split',   '<C-s>')
   let s:keymap_vsplit  = get(g:, 'ranger_explorer_keymap_vsplit',  '<C-v>')
 
-  let s:edit           = 'map ' . s:keymap_edit    . ' shell -c ' . s:kill_ranger . 'edit \%d/\%s'    . ' ' . s:cmd_file. ' ' . s:path_file
-  let s:tabedit        = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file
-  let s:split          = 'map ' . s:keymap_split   . ' shell -c ' . s:kill_ranger . 'split \%d/\%s'   . ' ' . s:cmd_file. ' ' . s:path_file
-  let s:vsplit         = 'map ' . s:keymap_vsplit  . ' shell -c ' . s:kill_ranger . 'vsplit \%d/\%s'  . ' ' . s:cmd_file. ' ' . s:path_file
+  " edit_cmd
+  " NOTE: nvim can't recognized (%,# escapes)
+  let edit_path= has('nvim') ? '%d/%s' : '\%d/\%s'
+
+  let s:edit           = 'map ' . s:keymap_edit    . ' shell -c ' . s:kill_ranger . 'edit '    . edit_path    . ' ' . s:cmd_file. ' ' . s:path_file
+  let s:tabedit        = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit ' . edit_path . ' ' . s:cmd_file. ' ' . s:path_file
+  let s:split          = 'map ' . s:keymap_split   . ' shell -c ' . s:kill_ranger . 'split '   . edit_path   . ' ' . s:cmd_file. ' ' . s:path_file
+  let s:vsplit         = 'map ' . s:keymap_vsplit  . ' shell -c ' . s:kill_ranger . 'vsplit '  . edit_path  . ' ' . s:cmd_file. ' ' . s:path_file
 endfunction
 
 function! s:project_root_dir()
@@ -93,6 +96,25 @@ function! s:project_root_dir()
     return current_dir
   endif
   return root_dir
+endfunction
+
+function! s:open_file() abort
+  if filereadable(s:cmd_file)
+    for c in readfile(s:cmd_file)
+      let cmd = c
+    endfor
+    call delete(s:cmd_file)
+  else
+    let cmd = 'edit'
+  endif
+
+  if filereadable(s:path_file)
+    for path in readfile(s:path_file)
+      exec cmd . path
+    endfor
+    call delete(s:path_file)
+  endif
+  redraw!
 endfunction
 
 " Initialize
