@@ -11,17 +11,17 @@ if !exists('g:loaded_ranger_explorer')
 endif
 let g:loaded_ranger_explorer = 1
 
-let s:save_cpoptions = &cpoptions
+let s:save_cpo = &cpoptions
 set cpoptions&vim
 
 let s:kill_ranger    = expand('<sfile>:p:h:h') . '/script/kill_parent_ranger.sh '
 let s:cmd_file       = tempname()
 let s:path_file      = tempname()
 
-let s:keymap_edit    = exists('g:ranger_explorer_keymap_edit')    ? g:ranger_explorer_keymap_edit    :'<C-o>'
-let s:keymap_tabedit = exists('g:ranger_explorer_keymap_tabedit') ? g:ranger_explorer_keymap_tabedit :'<C-t>'
-let s:keymap_split   = exists('g:ranger_explorer_keymap_split')   ? g:ranger_explorer_keymap_split   :'<C-s>'
-let s:keymap_vsplit  = exists('g:ranger_explorer_keymap_vsplit')  ? g:ranger_explorer_keymap_vsplit  :'<C-v>'
+let s:keymap_edit    = get(g:, 'ranger_explorer_keymap_edit',    '<C-o>')
+let s:keymap_tabedit = get(g:, 'ranger_explorer_keymap_tabedit', '<C-t>')
+let s:keymap_split   = get(g:, 'ranger_explorer_keymap_split',   '<C-s>')
+let s:keymap_vsplit  = get(g:, 'ranger_explorer_keymap_vsplit',  '<C-v>')
 
 let s:edit           = 'map ' . s:keymap_edit    . ' shell -c ' . s:kill_ranger . 'edit \%d/\%s'    . ' ' . s:cmd_file. ' ' . s:path_file
 let s:tabedit        = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit \%d/\%s' . ' ' . s:cmd_file. ' ' . s:path_file
@@ -40,7 +40,7 @@ endfunction
 
 function! ranger_explorer#open(path)
   if !executable('ranger')
-    echomsg 'You need install ranger.'
+    echoerr 'You need install ranger.'
     return
   endif
 
@@ -89,5 +89,5 @@ function! ranger_explorer#open_with_edit(path) abort
   :filetype detect
 endfunction
 
-let &cpoptions = s:save_cpoptions
-unlet s:save_cpoptions
+let &cpoptions = s:save_cpo
+unlet s:save_cpo
