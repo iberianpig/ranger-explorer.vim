@@ -1,8 +1,9 @@
 ## ranger-explorer.vim
 Vim plugin to use [Ranger](http://ranger.nongnu.org/) as a file explorer.  
-* Seamless switching between Vim and Ranger with opening in the same buffer
-* Open files in tabs or in vertically/horizontal split windows on Vim from Ranger
-* Dynamically defining keymaps on Ranger
+* Seamless switching between Vim and Ranger
+* Adding buffer in the same process not a child of Ranger process.
+* Selecting how to open in `tabedit` / `vsplit` / `split` by Ranger's keymap
+* Dynamically defining above keymaps on Ranger
 
 ![ranger-explorer](https://i.gyazo.com/fb4c28ca7bfc74559b3ba08b02da2c95.gif)
 
@@ -13,12 +14,23 @@ Vim plugin to use [Ranger](http://ranger.nongnu.org/) as a file explorer.
 ## installation
 
 ```vim
-"NeoBundle
-NeoBundle 'iberianpig/ranger-explorer.vim'
-
 "vim-plug
 Plug 'iberianpig/ranger-explorer.vim'
+
+"NeoBundle
+NeoBundle 'iberianpig/ranger-explorer.vim'
 ```
+
+**NOTE: If you use neovim, you have to add the dependency to the plugin bclose.vim:**
+
+```vim
+" vim-plug
+Plug 'rbgrouleff/bclose.vim'
+
+" NeoBundle
+NeoBundle 'rbgrouleff/bclose.vim'
+```
+
 
 ## Usage
 
