@@ -11,7 +11,7 @@ Vim plugin to use [Ranger](http://ranger.nongnu.org/) as a file explorer.
 
 * ranger(http://ranger.nongnu.org/)
 
-## installation
+## Installation
 
 ```vim
 "vim-plug
@@ -21,7 +21,7 @@ Plug 'iberianpig/ranger-explorer.vim'
 NeoBundle 'iberianpig/ranger-explorer.vim'
 ```
 
-**NOTE: If you use neovim, you have to add the dependency to the plugin bclose.vim:**
+**NOTE: If you use Neovim, you have to add the dependency to the plugin bclose.vim:**
 
 ```vim
 " vim-plug
