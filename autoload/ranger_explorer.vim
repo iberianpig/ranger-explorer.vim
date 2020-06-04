@@ -29,19 +29,17 @@ function! ranger_explorer#open(path)
         \ . ' --cmd="' . s:vsplit  . '"'
 
   if has('nvim')
+    let rangerCallback = { 'name': 'ranger' }
+    function! rangerCallback.on_exit(job_id, code, event)
+      " NOTE: Delete terminal's buffer left by killing ranger process
+      silent! Bclose!
+      try
+        call s:open_file()
+      endtry
+    endfunction
     enew
-    call termopen(command, {
-          \ 'name': 'ranger',
-          \ 'on_exit': {job_id, code, event -> s:ranger_callback(code)},
-          \ })
+    call termopen(command, rangerCallback)
     startinsert
-  elseif has('terminal')
-    call term_start('env ' . command, {
-         \ 'term_name': 'ranger',
-         \ 'curwin': v:true,
-         \ 'term_finish': 'close',
-         \ 'exit_cb': {status, code -> s:ranger_callback(code)},
-         \ })
   else
     exec 'silent !' . command
     call s:open_file()
@@ -88,25 +86,6 @@ function! s:initialize() abort
   let s:tabedit        = 'map ' . s:keymap_tabedit . ' shell -c ' . s:kill_ranger . 'tabedit ' . edit_path . ' ' . s:cmd_file. ' ' . s:path_file
   let s:split          = 'map ' . s:keymap_split   . ' shell -c ' . s:kill_ranger . 'split '   . edit_path   . ' ' . s:cmd_file. ' ' . s:path_file
   let s:vsplit         = 'map ' . s:keymap_vsplit  . ' shell -c ' . s:kill_ranger . 'vsplit '  . edit_path  . ' ' . s:cmd_file. ' ' . s:path_file
-endfunction
-
-function! s:ranger_callback(exit_code) abort
-  if a:exit_code == 0
-    if has('nvim')
-      silent! Bclose!
-    else
-      let current_buf = bufnr('%')
-      silent! buffer #
-      " NOTE: Prevent to quit vim
-      if winnr('$') == 1 && bufnr('%') ==# current_buf
-        enew
-      endif
-    endif
-  endif
-
-  try
-    call s:open_file()
-  endtry
 endfunction
 
 function! s:project_root_dir()
