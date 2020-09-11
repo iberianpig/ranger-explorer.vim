@@ -22,7 +22,7 @@ function! ranger_explorer#open(path)
     return
   endif
 
-  let command = 'ranger --choosefile=' . s:path_file . ' ' . a:path 
+  let command = 'ranger --choosefile=' . s:path_file . ' ' . a:path
         \ . ' --cmd="' . s:edit    . '"'
         \ . ' --cmd="' . s:tabedit . '"'
         \ . ' --cmd="' . s:split   . '"'
@@ -55,6 +55,11 @@ endfunction
 function! ranger_explorer#open_current_dir() abort
   let current_dir = expand('%:p:h')
   :call ranger_explorer#open(current_dir)
+endfunction
+
+function! ranger_explorer#open_current_file() abort
+  let current_file = expand('%')
+  :call ranger_explorer#open(current_file)
 endfunction
 
 function! ranger_explorer#open_with_edit(path) abort
