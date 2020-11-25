@@ -15,6 +15,9 @@ let g:loaded_netrwPlugin = 'disable'
 let s:save_cpoptions = &cpoptions
 set cpoptions&vim
 
+command! RangerOpenCurrentFile
+\    call ranger_explorer#open_current_file()
+
 command! RangerOpenCurrentDir
 \    call ranger_explorer#open_current_dir()
 

@@ -59,8 +59,9 @@ let g:ranger_explorer_keymap_vsplit  = '<C-v>'
 
 #### Keymap on Vim
 
-Add following keymap to `~/.vimrc`
+Add following keymap to `~/.vimrc` (Example keymap)
 ```vim
+nnoremap <silent><Leader>n :RangerOpenCurrentFile<CR>
 nnoremap <silent><Leader>c :RangerOpenCurrentDir<CR>
 nnoremap <silent><Leader>f :RangerOpenProjectRootDir<CR>
 ```
