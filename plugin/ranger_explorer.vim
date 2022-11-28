@@ -16,13 +16,13 @@ let s:save_cpoptions = &cpoptions
 set cpoptions&vim
 
 command! RangerOpenCurrentFile
-\    call ranger_explorer#open_current_file()
+\    call ranger_explorer#open_current_file(<q-args>)
 
 command! RangerOpenCurrentDir
-\    call ranger_explorer#open_current_dir()
+\    call ranger_explorer#open_current_dir(<q-args>)
 
 command! RangerOpenProjectRootDir
-\    call ranger_explorer#open_project_root_dir()
+\    call ranger_explorer#open_project_root_dir(<q-args>)
 
 augroup open_with_ranger
   autocmd!

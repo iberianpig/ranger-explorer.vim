@@ -16,7 +16,7 @@ set cpoptions&vim
 
 " Public
 
-function! ranger_explorer#open(path)
+function! ranger_explorer#open(path, args)
   if !executable('ranger')
     echoerr 'You need install ranger.'
     return
@@ -28,6 +28,7 @@ function! ranger_explorer#open(path)
           \ . ' --cmd="' . s:tabedit . '"'
           \ . ' --cmd="' . s:split   . '"'
           \ . ' --cmd="' . s:vsplit  . '"'
+          \ . ' ' . a:args
   else
     let command = 'ranger --choosefile=' . s:path_file
           \ . ' --selectfile="' . a:path . '"'
@@ -35,6 +36,7 @@ function! ranger_explorer#open(path)
           \ . ' --cmd="' . s:tabedit . '"'
           \ . ' --cmd="' . s:split   . '"'
           \ . ' --cmd="' . s:vsplit  . '"'
+          \ . ' ' . a:args
   endif
 
   if has('nvim')
@@ -56,19 +58,19 @@ function! ranger_explorer#open(path)
 
 endfunction
 
-function! ranger_explorer#open_project_root_dir() abort
+function! ranger_explorer#open_project_root_dir(args) abort
   let root_dir = s:project_root_dir()
-  :call ranger_explorer#open(root_dir)
+  :call ranger_explorer#open(root_dir, a:args)
 endfunction
 
-function! ranger_explorer#open_current_dir() abort
+function! ranger_explorer#open_current_dir(args) abort
   let current_dir = expand('%:p:h')
-  :call ranger_explorer#open(current_dir)
+  :call ranger_explorer#open(current_dir, a:args)
 endfunction
 
-function! ranger_explorer#open_current_file() abort
+function! ranger_explorer#open_current_file(args) abort
   let current_file = expand('%')
-  :call ranger_explorer#open(current_file)
+  :call ranger_explorer#open(current_file, a:args)
 endfunction
 
 function! ranger_explorer#open_with_edit(path) abort
@@ -76,7 +78,7 @@ function! ranger_explorer#open_with_edit(path) abort
     return
   endif
   bw!
-  :call ranger_explorer#open(a:path)
+  :call ranger_explorer#open(a:path, "")
   :filetype detect
 endfunction
 
