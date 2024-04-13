@@ -24,6 +24,9 @@ command! RangerOpenCurrentDir
 command! RangerOpenProjectRootDir
 \    call ranger_explorer#open_project_root_dir(<q-args>)
 
+command! -nargs=? Ranger
+\    call ranger_explorer#open(<q-args>, "")
+
 augroup open_with_ranger
   autocmd!
   autocmd BufEnter * silent call ranger_explorer#open_with_edit(expand("<amatch>"))
